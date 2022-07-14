@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/devdojo/tails.svg?style=flat-square)](https://packagist.org/packages/devdojo/tails)
 [![Total Downloads](https://img.shields.io/packagist/dt/devdojo/tails.svg?style=flat-square)](https://packagist.org/packages/devdojo/tails)
-![GitHub Actions](https://github.com/devdojo/tails/actions/workflows/main.yml/badge.svg)
 
 ![Tails Package Image](https://cdn.devdojo.com/images/july2022/tails-package-image.jpeg)
 
