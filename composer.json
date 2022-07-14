@@ -1,0 +1,54 @@
+{
+    "name": "devdojo/tails",
+    "description": "Build beautiful landing pages and designs using Tails and use this package to fetch those designs via the API",
+    "keywords": [
+        "devdojo",
+        "tails"
+    ],
+    "homepage": "https://github.com/devdojo/tails",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Tony Lea",
+            "email": "tony@devdojo.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Devdojo\\Tails\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Devdojo\\Tails\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Devdojo\\Tails\\TailsServiceProvider"
+            ],
+            "aliases": {
+                "Tails": "Devdojo\\Tails\\TailsFacade"
+            }
+        }
+    }
+}
