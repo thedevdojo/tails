@@ -5,6 +5,7 @@ namespace Devdojo\Tails\Commands;
 use Illuminate\Console\Command;
 use Facades\Devdojo\Tails\Tails;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 
 class Clear extends Command
 {
@@ -35,6 +36,7 @@ class Clear extends Command
             Cache::forget($cacheKey);
             $this->info("Cleared cached result with key: {$cacheKey}");
         }
+        Artisan::call('view:clear');
 
     }
 }

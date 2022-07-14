@@ -59,7 +59,7 @@ If you get a response that says **pong**, you have successfully authenticated an
 
 ### 7. Displaying Designs
 
-We've made it really easy to display the designs you created in tails inside of your application. You may choose to display the page on a specific route or you may wish to add the design as an include inside of an existing blade file. Let's cover displaying the page on a route first.
+We've made it really easy to display the designs you created with tails inside of your application. You can display the page from a specific route or include the design inside an existing blade file. Let's cover displaying the page on a route first.
 
 #### Displaying the page via a Route
 
@@ -205,6 +205,8 @@ TAILS_WEBHOOK_KEY=DWpXWMHxAdePDleePCYyGgEs2VGe6j
 This is a security measure, it will gaurantee that the Tails application is the only application sending requests to that endpoint. After you've added this key to your environment file and updated the correct URL in the Webhook modal, you should be all set.
 
 Each time you are working in the Tails application and a page is saved, it will send a webhook to your application telling it which pages need to be cleared from the cache, this way the new version will be served up the next time someone visits that page.
+
+> Note: If you are working on an app from your local machine, you will need to make sure it is accessible from a live URL. You can use tools like [Expose](https://expose.dev) or [Ngrok](https://ngrok.com/) to create a live URL of your local website. They both have some free options that will work for testing your webhook functionality. BTW, using the https:// version instead of the http:// version will work better.
 
 ### 9. That's it 🍻
 

@@ -128,6 +128,8 @@ class Tails
 
         $cacheKey = 'tails.' . $project->slug . $page_slug;
         Cache::forget($cacheKey);
+
+        Artisan::call('view:clear');
         
         \Log::info('Cleared cache for key: ' . $cacheKey);
     }
