@@ -13,12 +13,8 @@ class TailsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /*
-         * Optional methods to load your package assets
-         */
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'tails');
+        // Load tails views and routes
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'tails');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         if ($this->app->runningInConsole()) {
@@ -26,32 +22,20 @@ class TailsServiceProvider extends ServiceProvider
                 __DIR__.'/../config/config.php' => config_path('tails.php'),
             ], 'tails');
 
-            // Publishing the views.
-            /*$this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/tails'),
-            ], 'views');*/
-
-            // Publishing assets.
-            /*$this->publishes([
-                __DIR__.'/../resources/assets' => public_path('vendor/tails'),
-            ], 'assets');*/
-
-            // Publishing the translation files.
-            /*$this->publishes([
-                __DIR__.'/../resources/lang' => resource_path('lang/vendor/tails'),
-            ], 'lang');*/
-
-            // Registering package commands.
+            // Registering tails commands.
             $this->commands([
                 Commands\Clear::class,
                 Commands\Ping::class
             ]);
         }
 
+        // This directive is used inside of the resources/views/page.blade.php, and is the view that is loaded
+        // when calling the Tails::get() route
         Blade::directive('tails_page', function($variable){
             return '<?php echo \Blade::render("@tails(' . $variable . ':html)"); ?>';
         });
 
+        // Default @tails directive
         Blade::directive('tails', function ($projectString) {
             
             $projectStringTrimmed = trim(trim($projectString, "'"), '"');            
