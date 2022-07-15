@@ -3,7 +3,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/devdojo/tails.svg?style=flat-square)](https://packagist.org/packages/devdojo/tails)
 [![Total Downloads](https://img.shields.io/packagist/dt/devdojo/tails.svg?style=flat-square)](https://packagist.org/packages/devdojo/tails)
 
-![Tails Package Image](https://cdn.devdojo.com/images/july2022/tails-package-image.jpeg)
+![Tails Package Image](https://cdn.devdojo.com/images/july2022/tails-package-img.jpeg)
 
 This package will allow you to easily fetch designs that you have created in the [Tails](https://devdojo.com/tails) page builder. Follow the steps below to learn how to install, configure, and use this package.
 
