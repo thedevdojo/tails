@@ -2,8 +2,8 @@
 
 namespace Devdojo\Tails\Commands;
 
+use Devdojo\Tails\Facades\Tails;
 use Illuminate\Console\Command;
-use Facades\Devdojo\Tails\Tails;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
 

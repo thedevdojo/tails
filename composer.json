@@ -47,7 +47,7 @@
                 "Devdojo\\Tails\\TailsServiceProvider"
             ],
             "aliases": {
-                "Tails": "Devdojo\\Tails\\TailsFacade"
+                "Tails": "Devdojo\\Tails\\Facades\\Tails"
             }
         }
     }

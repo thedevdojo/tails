@@ -2,9 +2,9 @@
 
 namespace Devdojo\Tails;
 
+use Devdojo\Tails\Facades\Tails;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
-use Facades\Devdojo\Tails\Tails;
 
 class TailsServiceProvider extends ServiceProvider
 {
@@ -75,11 +75,6 @@ class TailsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'tails');
 
         // Register the main class to use with the facade
-        $this->app->singleton('tails', function () {
-            return new Tails;
-        });
-
-        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-        $loader->alias('Tails', "Devdojo\\Tails\\Tails");
+        $this->app->singleton('tails', \Devdojo\Tails\Tails::class);
     }
 }
