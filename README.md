@@ -208,11 +208,21 @@ Each time you are working in the Tails application and a page is saved, it will 
 
 > Note: If you are working on an app from your local machine, you will need to make sure it is accessible from a live URL. You can use tools like [Expose](https://expose.dev) or [Ngrok](https://ngrok.com/) to create a live URL of your local website. They both have some free options that will work for testing your webhook functionality. BTW, using the https:// version instead of the http:// version will work better.
 
-### 9. That's it 🍻
+### 9. 🍻 That's it
 
 That's the basics on how to setup this package and use with [Tails](https://devdojo.com/tails). 
 
 Thanks for using Tails and feel free to reach out to [us on Twitter](https://twitter.com/thedevdojo) with any issues or recommendations and we'll try and get back to you in an appropriate time frame. Thanks again for using our products. You rock 🤘
+
+### 🗑 Removing Cached Files
+
+You can use the Webhook to automatically clear cached pages and show the most up-to-date version; however, you can manually clear these cached files by running the following command:
+
+```php
+php artisan tails:clear
+```
+
+Now, when you view a page that calls the Tails API, you will get a new version of that page.
 
 
 ### Changelog
