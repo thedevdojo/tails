@@ -10,21 +10,21 @@ use Illuminate\Support\Facades\Artisan;
 class Clear extends Command
 {
     /**
-     * The name and signature of the console command.
+     * The tails:clear signature for the console command.
      *
      * @var string
      */
     protected $signature = 'tails:clear';
 
     /**
-     * The console command description.
+     * The tails:clear description.
      *
      * @var string
      */
     protected $description = 'Clears the cached results retrived from tails';
 
     /**
-     * Execute the console command.
+     * Execute the console command to clear the cached pages
      *
      * @return int
      */

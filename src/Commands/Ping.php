@@ -10,21 +10,21 @@ use Illuminate\Support\Facades\Http;
 class Ping extends Command
 {
     /**
-     * The name and signature of the console command.
+     * This command will ping the DevDojo Tails API to confirm it's connected
      *
      * @var string
      */
     protected $signature = 'tails:ping';
 
     /**
-     * The console command description.
+     * Ping command description
      *
      * @var string
      */
-    protected $description = 'Quick check to confirm you have added the correct API key and are talking to the Tails API';
+    protected $description = 'Check to confirm you have added the correct API key and are talking to the Tails API';
 
     /**
-     * Execute the console command.
+     * Execute the ping test
      *
      * @return int
      */
