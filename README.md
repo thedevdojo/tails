@@ -89,7 +89,7 @@ This doesn't have to map to the homepage, it could map to any route:
 Tails::get('welcome', 'my-website');
 ```
 
-Additionally, you can load any page from project by using dot notation, like so:
+Additionally, you can load any page from a specific project by using dot notation, like so:
 
 ```php
 Tails::get('about', 'my-website.about');
@@ -111,17 +111,13 @@ Using dot notation, you can also load the design for a specific page:
 @tails('my-website.about')
 ```
 
-By default these Blade helpers is only going to give you the content inside the `<body>` of the design. You may also need to load the specific minified styles for that HTML, you can easily do that with the following code:
+By default the **@tails** directive will only return the content inside the `<body>` of the design. If you wish to fetch the full HTML of the page you can specify it after the **:** symbol, like so:
 
 ```php
-<style>
-    @tails('my-website:page.styles')
-</style>
-
-@tails('my-website')
+@tails('mywebsite.about:html')
 ```
 
-Using the `@tails` directive you can retrieve all the information about a specific page. Here is an example structure of the API response:
+Using the `@tails` directive you can retrieve all the information about a specific page using **:** notation. Here is an example structure of the API response:
 
 ```javascript
 {
@@ -180,6 +176,16 @@ You can retrieve all this information using the @tails directive like so:
 @tails('my-website:page.title');
 @tails('my-website:page.slug');
 ...
+```
+
+Here is an example of how you would display a page with the minified styles and the HTML body conent:
+
+```php
+<style>
+    @tails('my-website:page.styles')
+</style>
+
+@tails('my-website')
 ```
 
 ### 8. Enable the Webhook
