@@ -139,7 +139,7 @@ class Tails
 
     // This function will clear OP Cache if it is enabled
     public function clearOPCache(){
-        if(extension_loaded('opcache')){
+        if( is_array(opcache_get_status()) ? 'enabled' : 'disabled' ){
             opcache_reset();
         }
     }
