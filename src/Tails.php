@@ -131,7 +131,16 @@ class Tails
         Cache::forget($cacheKey);
 
         Artisan::call('view:clear');
+        $this->clearOPCache();
+
         
         \Log::info('Cleared cache for key: ' . $cacheKey);
+    }
+
+    // This function will clear OP Cache if it is enabled
+    public function clearOPCache(){
+        if(extension_loaded('opcache')){
+            opcache_reset();
+        }
     }
 }

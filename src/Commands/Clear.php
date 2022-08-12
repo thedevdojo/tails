@@ -37,6 +37,7 @@ class Clear extends Command
             $this->info("Cleared cached result with key: {$cacheKey}");
         }
         Artisan::call('view:clear');
+        Tails::clearOPCache();
 
     }
 }
