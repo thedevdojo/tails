@@ -58,10 +58,7 @@ class TailsServiceProvider extends ServiceProvider
             $response = Tails::getResponse($projectURL);
             $data = Tails::getDataFromResponse($key, $response);
             
-            //return $data;
-            $data = str_replace("'", "\'", $data);
-            $data = str_replace('"', '\"', $data);
-            return '<?php echo \Blade::render("' . $data . '"); ?>';
+            return "<?php echo \Blade::render($data); ?>";
         });
 
     }
