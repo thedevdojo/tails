@@ -190,7 +190,7 @@ Here is an example of how you would display a page with the minified styles and 
 
 ### 8. Enable the Webhook
 
-Be default all the requests that are made to fetch designs from the Tails API is cached on your applications end. This means that when a user visits your website or application it doesn't have to talk to the Tails API, resulting in faster page loads. Unfortunately since it's cached, your application needs to know when a new version of this page has been updated and show the updated version to your users. You can easiily solve this by enabling the webhook.
+By default all the requests that are made to fetch designs from the Tails API is cached on your applications end. This means that when a user visits your website or application it doesn't have to talk to the Tails API, resulting in faster page loads. Unfortunately since it's cached, your application needs to know when a new version of this page has been updated and show the updated version to your users. You can easiily solve this by enabling the webhook.
 
 ### Enabling Webhook and setting your Webhook URL
 
