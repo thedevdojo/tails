@@ -5,6 +5,8 @@ namespace Devdojo\Tails;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Facades\Devdojo\Tails\Tails;
+use Illuminate\Support\HtmlString;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class TailsServiceProvider extends ServiceProvider
 {
@@ -13,6 +15,7 @@ class TailsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         // Load tails views and routes
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'tails');
         $this->loadRoutesFrom(__DIR__.'/routes.php');
@@ -32,12 +35,22 @@ class TailsServiceProvider extends ServiceProvider
         // This directive is used inside of the resources/views/page.blade.php, and is the view that is loaded
         // when calling the Tails::get() route
         Blade::directive('tails_page', function($variable){
-            return '<?php echo \Blade::render("@tails(' . $variable . ':html)"); ?>';
+            return '<?php echo \Blade::render("@tails(' . $variable . ':html)", [], false); ?>';
         });
+
+
+        /* Blade::directive('tails', function ($projectString) {
+             return '<?php echo \Blade::render("@tails_content(' . $projectString . ':body)", [], true); ?>';
+        }); */
 
         // Default @tails directive
         Blade::directive('tails', function ($projectString) {
-            
+            $processRender = false;
+            if(str_starts_with($projectString, 'process-')){
+                $processRender = true;
+                $projectString = str_replace('process-', '', $projectString);
+            }
+
             $projectStringTrimmed = trim(trim($projectString, "'"), '"');            
             $key = Tails::getKeyFromProjectString($projectStringTrimmed);
             $projectStringWithoutKey = str_replace(':' . $key, '', $projectStringTrimmed);
@@ -57,8 +70,18 @@ class TailsServiceProvider extends ServiceProvider
 
             $response = Tails::getResponse($projectURL);
             $data = Tails::getDataFromResponse($key, $response);
-            
-            return \Blade::render($data);
+
+            if(($key == 'html') || is_array($projectString)){
+                return \Blade::render($data, [], false);
+            } else {
+
+                if($key == "page.styles"){
+                    $data = str_replace('"', '\"', $data);
+                    return '<?php echo \Blade::render("' . $data . '"); ?>';
+                }
+                $tailsVar = 'process-' . $projectStringWithoutKey;
+                return '<?php echo \Blade::render("@tails(' . $projectStringWithoutKey . ':body)", [], true); ?>';
+            }
         });
 
     }
@@ -78,5 +101,8 @@ class TailsServiceProvider extends ServiceProvider
 
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('Tails', "Devdojo\\Tails\\Tails");
+
+        $router = $this->app['router'];
+        $router->pushMiddlewareToGroup('web', Devdojo\Tails\Middleware\BladeViewsDoNotExist::class);
     }
 }
