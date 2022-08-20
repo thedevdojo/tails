@@ -120,7 +120,9 @@ class Tails
 
     // This is the function that is called for Tails::get()
     public static function get($route, $project){
-        Route::view($route, 'tails::page', ['project' => $project]);
+        Route::group(['middleware' => [\Devdojo\Tails\Middleware\BladeViewsDoNotExist::class]], function () use($route, $project){
+            Route::view($route, 'tails::page', ['project' => $project]);
+        });
     }
 
     // The function that runs from the incoming webhook
