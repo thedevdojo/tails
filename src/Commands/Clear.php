@@ -36,6 +36,12 @@ class Clear extends Command
             Cache::forget($cacheKey);
             $this->info("Cleared cached result with key: {$cacheKey}");
         }
+
+        $tailsViewFolder = resource_path('views/' . config('tails.view_folder'));
+        Tails::recursiveDeleteTailsViewFolder($tailsViewFolder);
+
+        $this->info("Cleared blade files from {$tailsViewFolder}");
+
         Artisan::call('view:clear');
         Tails::clearOPCache();
 

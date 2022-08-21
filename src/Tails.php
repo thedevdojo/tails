@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Artisan;
 class Tails
 {
     // get the response from a specific project
-    public function getResponse($project){
+    public static function getResponse($project){
         $cacheKey = 'tails.' . str_replace('/', '.', $project);
         if( Cache::has($cacheKey) ){
             return Cache::get($cacheKey);
@@ -34,7 +34,7 @@ class Tails
     }
 
     // function used for the php artisan cache:clear command
-    public function getCacheArray(){
+    public static function getCacheArray(){
         $endpoint = config('tails.api_endpoint') . '/tails-clear';
         $apiKey = config('tails.api_key');
         if(is_null($apiKey)){
@@ -52,13 +52,9 @@ class Tails
     }
 
     // Parse the data from the response
-    public function getDataFromResponse($key, $response){
+    public static function getDataFromResponse($key, $response){
         if(!isset($response->header)){
             abort(400, 'No response received from the server');
-        }
-
-        if($key == ''){
-            $key = 'body';
         }
         
         if(strpos($key, '.') !== false){
@@ -72,12 +68,12 @@ class Tails
             $value = $response->{$key};
         }
 
-        $data = $this->replaceBladeHTMLWithBladeDirectives($value);
+        $data = self::replaceBladeHTMLWithBladeDirectives($value);
         return $data;
     }
 
     // current HTML tags that are replaced and converted into blade making the page dynamic
-    private function replaceBladeHTMLWithBladeDirectives($string){
+    public static function replaceBladeHTMLWithBladeDirectives($string){
         $string = str_replace('<ifauth>', '@auth', $string);
         $string = str_replace('</ifauth>', '@endauth', $string);
         $string = str_replace('<ifAuth>', '@auth', $string);
@@ -103,11 +99,15 @@ class Tails
             }
         }
 
+        foreach(config('tails.blade_tags') as $tag => $value){
+            $string = str_replace($tag, $value, $string);
+        }
+
         return $string;
     }
 
     // Are we getting a specific value from this project like the :html or the :page.styles
-    public function getKeyFromProjectString($projectString){
+    public static function getKeyFromProjectString($projectString){
         $key = '';
         if(strpos($projectString, ':') !== false){
             $keyArray = explode(':', $projectString);
@@ -120,9 +120,61 @@ class Tails
 
     // This is the function that is called for Tails::get()
     public static function get($route, $project){
-        Route::group(['middleware' => [\Devdojo\Tails\Middleware\BladeViewsDoNotExist::class]], function () use($route, $project){
-            Route::view($route, 'tails::page', ['project' => $project]);
-        });
+        $project = $project . ':html';
+        [$data, $project, $projectPage, $key] = self::getProjectDataFromString($project);
+        $viewLocation = self::storeBladeFile( $project, $projectPage, $data );
+        Route::view($route, $viewLocation);
+    }
+    
+
+    public static function storeBladeFile($project, $projectPage, $contents, $key = 'html'){
+        $viewFolder = resource_path('views/' . config('tails.view_folder') . '/' . $project);
+        if(empty($projectPage)){
+            $projectPage = 'index';
+        }
+        $partial = '';
+        if($key != 'html'){
+            $partial .= '/' . str_replace('.', '/', $key);
+        }
+        $file = $viewFolder . '/' . $projectPage . $partial . '.blade.php';
+        if(!file_exists($file)){
+            if (!file_exists( dirname($file) )) {
+                mkdir(dirname($file), 0777, true);
+            }
+            file_put_contents($file, $contents);
+        }
+        
+        $viewLocation = config('tails.view_folder') . '.' . $project . '.' . $projectPage;
+
+        return $viewLocation;
+    }
+
+    public static function getProjectDataFromString($projectString){
+        $projectStringTrimmed = trim(trim($projectString, "'"), '"');     
+        $key = self::getKeyFromProjectString($projectStringTrimmed);
+        $projectStringWithoutKey = str_replace(':' . $key, '', $projectStringTrimmed);
+
+        $projectArray = explode('.', $projectStringWithoutKey);
+        $project = $projectArray[0];
+        $projectPage = '';
+        
+        if(isset($projectArray[1])){
+            $projectPage = $projectArray[1];
+        }
+
+        $projectURL = $project;
+        if(!empty($projectPage)){
+            $projectURL = $project . '/' . $projectPage;
+        }
+
+        if($key == ''){
+            $key = 'body';
+        }
+
+        $response = self::getResponse($projectURL);
+        $data = self::getDataFromResponse($key, $response);
+
+        return [$data, $project, $projectPage, $key];
     }
 
     // The function that runs from the incoming webhook
@@ -147,11 +199,27 @@ class Tails
         $cacheKey = 'tails.' . $project->slug . $page_slug;
         Cache::forget($cacheKey);
 
+        $tailsViewFolder = resource_path('views/' . config('tails.view_folder'));
+        $this->recursiveDeleteTailsViewFolder($tailsViewFolder);
+
         Artisan::call('view:clear');
         $this->clearOPCache();
 
         
         \Log::info('Cleared cache for key: ' . $cacheKey);
+    }
+
+    public function recursiveDeleteTailsViewFolder($str) {
+        if (is_file($str)) {
+            return @unlink($str);
+        }
+        elseif (is_dir($str)) {
+            $scan = glob(rtrim($str,'/').'/*');
+            foreach($scan as $index=>$path) {
+                $this->recursiveDeleteTailsViewFolder($path);
+            }
+            return @rmdir($str);
+        }
     }
 
     // This function will clear OP Cache if it is enabled
