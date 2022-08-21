@@ -17,7 +17,7 @@ class TailsServiceProvider extends ServiceProvider
     {
 
         // Load tails views and routes
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'tails');
+        $this->loadViewsFrom(storage_path('app/tails-tmp'), 'tails');
         $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         if ($this->app->runningInConsole()) {
@@ -38,7 +38,7 @@ class TailsServiceProvider extends ServiceProvider
             [$data, $project, $projectPage, $key] = Tails::getProjectDataFromString($projectString);
 
             Tails::storeBladeFile( $project, $projectPage, $data, $key );
-            $includeFile = config('tails.view_folder') . '.' . $project . '.' . $projectPage;
+            $includeFile = 'tails::' . $project . '.' . $projectPage;
             if($key != 'html'){
                 $includeFile .= '.' . $key;
             }

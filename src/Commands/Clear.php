@@ -37,7 +37,7 @@ class Clear extends Command
             $this->info("Cleared cached result with key: {$cacheKey}");
         }
 
-        $tailsViewFolder = resource_path('views/' . config('tails.view_folder'));
+        $tailsViewFolder = storage_path('app/tails-tmp');
         Tails::recursiveDeleteTailsViewFolder($tailsViewFolder);
 
         $this->info("Cleared blade files from {$tailsViewFolder}");

@@ -99,6 +99,21 @@ class Tails
             }
         }
 
+        // trim any curly brace from {!! array.item !!} to {!! $array->item !!}
+        $bladeCurlyBraceMatches = [];
+        preg_match_all('/{!!(.*?)!!}/', $string, $bladeCurlyBraceMatches);
+        foreach($bladeCurlyBraceMatches[1] as $index => $curlyBrace){
+            $trimmedContent = trim($curlyBrace);
+            // dd($trimmedContent[0]);
+            if(isset($trimmedContent[0])){
+                // if it's a string we don't replace it
+                if($trimmedContent[0] != "'" && $trimmedContent[0] != '"'){
+                    $outputVariable = str_replace('.', '->', $trimmedContent);
+                    $string = str_replace($bladeCurlyBraceMatches[0][$index], '{!! $' . $outputVariable . '!!}', $string);
+                }
+            }
+        }
+
         foreach(config('tails.blade_tags') as $tag => $value){
             $string = str_replace($tag, $value, $string);
         }
@@ -128,7 +143,7 @@ class Tails
     
 
     public static function storeBladeFile($project, $projectPage, $contents, $key = 'html'){
-        $viewFolder = resource_path('views/' . config('tails.view_folder') . '/' . $project);
+        $viewFolder = storage_path('app/tails-tmp') . '/' . $project;
         if(empty($projectPage)){
             $projectPage = 'index';
         }
@@ -144,7 +159,7 @@ class Tails
             file_put_contents($file, $contents);
         }
         
-        $viewLocation = config('tails.view_folder') . '.' . $project . '.' . $projectPage;
+        $viewLocation = 'tails::' . $project . '.' . $projectPage;
 
         return $viewLocation;
     }
@@ -199,7 +214,7 @@ class Tails
         $cacheKey = 'tails.' . $project->slug . $page_slug;
         Cache::forget($cacheKey);
 
-        $tailsViewFolder = resource_path('views/' . config('tails.view_folder'));
+        $tailsViewFolder = storage_path('app/tails-tmp');
         $this->recursiveDeleteTailsViewFolder($tailsViewFolder);
 
         Artisan::call('view:clear');
