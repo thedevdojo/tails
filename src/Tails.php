@@ -99,6 +99,21 @@ class Tails
             }
         }
 
+        // trim any curly brace from {!! array.item !!} to {!! $array->item !!}
+        $bladeCurlyBraceMatches = [];
+        preg_match_all('/{!!(.*?)!!}/', $string, $bladeCurlyBraceMatches);
+        foreach($bladeCurlyBraceMatches[1] as $index => $curlyBrace){
+            $trimmedContent = trim($curlyBrace);
+            // dd($trimmedContent[0]);
+            if(isset($trimmedContent[0])){
+                // if it's a string we don't replace it
+                if($trimmedContent[0] != "'" && $trimmedContent[0] != '"'){
+                    $outputVariable = str_replace('.', '->', $trimmedContent);
+                    $string = str_replace($bladeCurlyBraceMatches[0][$index], '{!! $' . $outputVariable . '!!}', $string);
+                }
+            }
+        }
+
         foreach(config('tails.blade_tags') as $tag => $value){
             $string = str_replace($tag, $value, $string);
         }
