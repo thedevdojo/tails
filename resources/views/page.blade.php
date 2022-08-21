@@ -1,1 +1,0 @@
-@tails_page($project)
