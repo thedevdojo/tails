@@ -143,7 +143,7 @@ class Tails
     
 
     public static function storeBladeFile($project, $projectPage, $contents, $key = 'html'){
-        $viewFolder = resource_path('views/' . config('tails.view_folder') . '/' . $project);
+        $viewFolder = storage_path('app/tails-tmp') . '/' . $project;
         if(empty($projectPage)){
             $projectPage = 'index';
         }
@@ -159,7 +159,7 @@ class Tails
             file_put_contents($file, $contents);
         }
         
-        $viewLocation = config('tails.view_folder') . '.' . $project . '.' . $projectPage;
+        $viewLocation = 'tails::' . $project . '.' . $projectPage;
 
         return $viewLocation;
     }
@@ -214,7 +214,7 @@ class Tails
         $cacheKey = 'tails.' . $project->slug . $page_slug;
         Cache::forget($cacheKey);
 
-        $tailsViewFolder = resource_path('views/' . config('tails.view_folder'));
+        $tailsViewFolder = storage_path('app/tails-tmp');
         $this->recursiveDeleteTailsViewFolder($tailsViewFolder);
 
         Artisan::call('view:clear');
