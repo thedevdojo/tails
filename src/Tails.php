@@ -189,6 +189,10 @@ class Tails
         $response = self::getResponse($projectURL);
         $data = self::getDataFromResponse($key, $response);
 
+        if(empty($projectPage)){
+            $projectPage = 'index';
+        }
+
         return [$data, $project, $projectPage, $key];
     }
 
