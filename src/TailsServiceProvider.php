@@ -34,11 +34,12 @@ class TailsServiceProvider extends ServiceProvider
 
         // Default @tails directive
         Blade::directive('tails', function ($projectString) {
-
             [$data, $project, $projectPage, $key] = Tails::getProjectDataFromString($projectString);
-
-            Tails::storeBladeFile( $project, $projectPage, $data, $key );
-            $includeFile = 'tails::' . $project . '.' . $projectPage;
+            if(is_null($data)){
+                $includeFile = 'tails::' . $project . '.' . $projectPage;
+            } else {
+                $includeFile = Tails::storeBladeFile( $project, $projectPage, $data, $key );
+            }
             if($key != 'html'){
                 $includeFile .= '.' . $key;
             }
