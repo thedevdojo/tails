@@ -16,6 +16,7 @@ class Tails
         if( Cache::has($cacheKey) ){
             return Cache::get($cacheKey);
         }
+
         $endpoint = config('tails.api_endpoint') . '/tails' . '/' . $project;
         $apiKey = config('tails.api_key');
         if(is_null($apiKey)){
@@ -137,7 +138,11 @@ class Tails
     public static function get($route, $project){
         $project = $project . ':html';
         [$data, $project, $projectPage, $key] = self::getProjectDataFromString($project);
-        $viewLocation = self::storeBladeFile( $project, $projectPage, $data );
+        if(is_null($data)){
+            $viewLocation = 'tails::' . $project . '.' . $projectPage;
+        } else {
+            $viewLocation = self::storeBladeFile( $project, $projectPage, $data );
+        }
         Route::view($route, $viewLocation);
     }
     
@@ -186,8 +191,12 @@ class Tails
             $key = 'body';
         }
 
-        $response = self::getResponse($projectURL);
-        $data = self::getDataFromResponse($key, $response);
+        if(!view()->exists('tails::' . $project . '.' . $projectPage)){
+            $response = self::getResponse($projectURL);
+            $data = self::getDataFromResponse($key, $response);
+        }   else {
+            $data = null;
+        }
 
         if(empty($projectPage)){
             $projectPage = 'index';
