@@ -5,14 +5,14 @@
         "devdojo",
         "tails"
     ],
-    "homepage": "https://github.com/devdojo/tails",
+    "homepage": "https://github.com/roihan365/tails",
     "license": "MIT",
     "type": "library",
     "authors": [
         {
-            "name": "Tony Lea",
-            "email": "tony@devdojo.com",
-            "role": "Developer"
+            "name": "Roihan",
+            "email": "roihan@gmail.com",
+            "role": "WEB DEV"
         }
     ],
     "require": {
