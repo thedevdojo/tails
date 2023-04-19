@@ -200,6 +200,8 @@ In the project settings modal there is a tab on the left called **Webhook**, on 
 
 Your webhook URL is going to be `your-website.com/tails/webhook`, this route `/tails/webhook`, has already been added in this package. All you have to do is enter the URL inside of the textarea.
 
+> Note: If you need to change the tails webhook URL set the TAILS_WEBHOOK_URL env. This will change /tails/webhook to whatever you want.
+
 ### Adding the Webhook Key to your `.env`
 
 In the Webhook modal you will also see another input labeled `Webhook Key`, you will need to copy this value and paste it into your `.env` file like so:
@@ -208,7 +210,7 @@ In the Webhook modal you will also see another input labeled `Webhook Key`, you 
 TAILS_WEBHOOK_KEY=DWpXWMHxAdePDleePCYyGgEs2VGe6j
 ```
 
-This is a security measure, it will gaurantee that the Tails application is the only application sending requests to that endpoint. After you've added this key to your environment file and updated the correct URL in the Webhook modal, you should be all set.
+This is a security measure, it will gaurentee that the Tails application is the only application sending requests to that endpoint. After you've added this key to your environment file and updated the correct URL in the Webhook modal, you should be all set.
 
 Each time you are working in the Tails application and a page is saved, it will send a webhook to your application telling it which pages need to be cleared from the cache, this way the new version will be served up the next time someone visits that page.
 
