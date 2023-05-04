@@ -25,7 +25,7 @@ class Tails
         }
         $response = Http::withToken( $apiKey )->get($endpoint);
         if(!$response->ok()){
-            $this->handleErrorResponse($response);
+            self::handleErrorResponse($response);
         }
         $jsonResponse = (object)$response->json();
         if(isset($jsonResponse->header)){
@@ -45,7 +45,7 @@ class Tails
 
         $response = Http::withToken( $apiKey )->get($endpoint);
         if(!$response->ok()){
-            $this->handleErrorResponse($response);
+            self::handleErrorResponse($response);
         }
 
         $jsonResponse = (object)$response->json();
@@ -53,7 +53,7 @@ class Tails
         return $jsonResponse;
     }
 
-    private function handleErrorResponse($response){
+    public static function handleErrorResponse($response){
         $errorType = '';
         if($response->clientError()){
             $errorType = 'Client Error';
