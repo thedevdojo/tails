@@ -17,6 +17,7 @@ class Tails
             return Cache::get($cacheKey);
         }
 
+
         $endpoint = config('tails.api_endpoint') . '/tails' . '/' . $project;
         $apiKey = config('tails.api_key');
         if(is_null($apiKey)){
@@ -24,7 +25,7 @@ class Tails
         }
         $response = Http::withToken( $apiKey )->get($endpoint);
         if(!$response->ok()){
-            abort(400, 'Invalid response from API, please confirm you\'re using the correct API Key and you are calling an existing project.');
+            $this->handleErrorResponse($response);
         }
         $jsonResponse = (object)$response->json();
         if(isset($jsonResponse->header)){
@@ -44,12 +45,26 @@ class Tails
 
         $response = Http::withToken( $apiKey )->get($endpoint);
         if(!$response->ok()){
-            abort(400, 'Invalid response from API, please confirm you\'re using the correct API Key and you are calling an existing project.');
+            $this->handleErrorResponse($response);
         }
 
         $jsonResponse = (object)$response->json();
 
         return $jsonResponse;
+    }
+
+    private function handleErrorResponse($response){
+        $errorType = '';
+        if($response->clientError()){
+            $errorType = 'Client Error';
+        }
+
+        if($response->serverError()){
+            $errorType = 'Server Error';
+        }
+
+        $body = $response->body();
+        abort(400, 'Invalid response from API, please confirm you\'re using the correct API Key and you are calling an existing project.' . $errorType . ' - Body:' . $body);
     }
 
     // Parse the data from the response
