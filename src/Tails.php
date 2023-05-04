@@ -191,15 +191,15 @@ class Tails
             $key = 'body';
         }
 
+        if(empty($projectPage)){
+            $projectPage = 'index';
+        }
+
         if(!view()->exists('tails::' . $project . '.' . $projectPage)){
             $response = self::getResponse($projectURL);
             $data = self::getDataFromResponse($key, $response);
         }   else {
             $data = null;
-        }
-
-        if(empty($projectPage)){
-            $projectPage = 'index';
         }
 
         return [$data, $project, $projectPage, $key];
@@ -227,7 +227,7 @@ class Tails
         $cacheKey = 'tails.' . $project->slug . $page_slug;
         Cache::forget($cacheKey);
 
-        $tailsViewFolder = config('tails.temp_directory');
+        $tailsViewFolder = config('tails.directory');
         $this->recursiveDeleteTailsViewFolder($tailsViewFolder);
 
         Artisan::call('view:clear');
