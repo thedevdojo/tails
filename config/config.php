@@ -17,5 +17,5 @@ return [
     ],
 
     // This is where the temporary Tails files will be stored
-    'directory' => base_path('/storage/app/tails-tmp')
+    'directory' => base_path( env('TAILS_DIRECTORY', 'storage/app/tails-tmp') )
 ];
