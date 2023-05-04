@@ -17,7 +17,7 @@ class TailsServiceProvider extends ServiceProvider
     {
 
         // Load tails views and routes
-        $this->loadViewsFrom(storage_path('app/tails-tmp'), 'tails');
+        $this->loadViewsFrom(config('tails.directory'), 'tails');
         $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         if ($this->app->runningInConsole()) {

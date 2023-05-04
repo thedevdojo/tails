@@ -14,5 +14,8 @@ return [
     'blade_tags' => [
         '<userloop>' => '@foreach(\App\Models\User::all() as $user)',
         '</userloop>' => '@endforeach',
-    ]
+    ],
+
+    // This is where the temporary Tails files will be stored
+    'directory' => base_path( env('TAILS_DIRECTORY', 'storage/app/tails-tmp') )
 ];
