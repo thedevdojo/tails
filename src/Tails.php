@@ -202,16 +202,18 @@ class Tails
             $projectURL = $project . '/' . $projectPage;
         }
 
-        if($key == ''){
-            $key = 'body';
-        }
-
         if(empty($projectPage)){
             $projectPage = 'index';
         }
 
-        if(!view()->exists('tails::' . $project . '.' . $projectPage)){
-            abort(400, 'cannot find view for project at tails::' . $project . '.' . $projectPage);
+        if($key == ''){
+            $key = 'body';
+        }
+
+        $viewKey = ($key == 'html') ? '' : '.' . $key;
+
+        if(!view()->exists('tails::' . $project . '.' . $projectPage . $viewKey)){
+            abort(400, 'cannot find view for project at tails::' . $project . '.' . $projectPage . $viewKey);
             $response = self::getResponse($projectURL);
             $data = self::getDataFromResponse($key, $response);
         }   else {
