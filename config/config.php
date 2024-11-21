@@ -5,7 +5,7 @@
  */
 return [
     'api_key' => env('TAILS_API_KEY', null),
-    'api_endpoint' => 'https://devdojo.com/api/v1',
+    'api_endpoint' => 'https://tails.devdojo.com/api/v2',
     'webhook_key' => env('TAILS_WEBHOOK_KEY', null),
     'webhook_url' => env('TAILS_WEBHOOK_URL', 'tails/webhook'),
     

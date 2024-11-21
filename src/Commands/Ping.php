@@ -30,7 +30,7 @@ class Ping extends Command
      */
     public function handle()
     {
-        $endpoint = config('tails.api_endpoint') . '/tails-ping';
+        $endpoint = config('tails.api_endpoint') . '/ping';
         $apiKey = config('tails.api_key');
         if(is_null($apiKey)){
             abort(400, 'Invalid Tails API Key');
