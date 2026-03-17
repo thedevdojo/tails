@@ -37,7 +37,7 @@ class Tails
 
     // function used for the php artisan cache:clear command
     public static function getCacheArray(){
-        $endpoint = config('tails.api_endpoint') . '/tails-clear';
+        $endpoint = config('tails.api_endpoint') . '/clear';
         $apiKey = config('tails.api_key');
         if(is_null($apiKey)){
             abort(400, 'Invalid Tails API Key');
