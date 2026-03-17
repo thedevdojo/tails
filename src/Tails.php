@@ -16,15 +16,16 @@ class Tails
         if( Cache::has($cacheKey) ){
             return Cache::get($cacheKey);
         }
+
+
         $endpoint = config('tails.api_endpoint') . '/' . $project;
         $apiKey = config('tails.api_key');
         if(is_null($apiKey)){
             abort(400, 'Invalid Tails API Key');
         }
         $response = Http::withToken( $apiKey )->get($endpoint);
-        
         if(!$response->ok()){
-            abort(400, 'Invalid response from API, please confirm you\'re using the correct API Key and you are calling an existing project.');
+            self::handleErrorResponse($response);
         }
         $jsonResponse = (object)$response->json();
         if(isset($jsonResponse->header)){
@@ -44,12 +45,26 @@ class Tails
 
         $response = Http::withToken( $apiKey )->get($endpoint);
         if(!$response->ok()){
-            abort(400, 'Invalid response from API, please confirm you\'re using the correct API Key and you are calling an existing project.');
+            self::handleErrorResponse($response);
         }
 
         $jsonResponse = (object)$response->json();
 
         return $jsonResponse;
+    }
+
+    public static function handleErrorResponse($response){
+        $errorType = '';
+        if($response->clientError()){
+            $errorType = 'Client Error';
+        }
+
+        if($response->serverError()){
+            $errorType = 'Server Error';
+        }
+
+        $body = $response->body();
+        abort(400, 'Invalid response from API, please confirm you\'re using the correct API Key and you are calling an existing project.' . $errorType . ' - Body:' . $body);
     }
 
     // Parse the data from the response
@@ -138,13 +153,17 @@ class Tails
     public static function get($route, $project){
         $project = $project . ':html';
         [$data, $project, $projectPage, $key] = self::getProjectDataFromString($project);
-        $viewLocation = self::storeBladeFile( $project, $projectPage, $data );
+        if(is_null($data)){
+            $viewLocation = 'tails::' . $project . '.' . $projectPage;
+        } else {
+            $viewLocation = self::storeBladeFile( $project, $projectPage, $data );
+        }
         Route::view($route, $viewLocation);
     }
     
 
     public static function storeBladeFile($project, $projectPage, $contents, $key = 'html'){
-        $viewFolder = storage_path('app/tails-tmp') . '/' . $project;
+        $viewFolder = config('tails.directory') . '/' . $project;
         if(empty($projectPage)){
             $projectPage = 'index';
         }
@@ -187,8 +206,16 @@ class Tails
             $key = 'body';
         }
 
-        $response = self::getResponse($projectURL);
-        $data = self::getDataFromResponse($key, $response);
+        if(empty($projectPage)){
+            $projectPage = 'index';
+        }
+
+        if(!view()->exists('tails::' . $project . '.' . $projectPage)){
+            $response = self::getResponse($projectURL);
+            $data = self::getDataFromResponse($key, $response);
+        }   else {
+            $data = null;
+        }
 
         return [$data, $project, $projectPage, $key];
     }
@@ -215,7 +242,7 @@ class Tails
         $cacheKey = 'tails.' . $project->slug . $page_slug;
         Cache::forget($cacheKey);
 
-        $tailsViewFolder = storage_path('app/tails-tmp');
+        $tailsViewFolder = config('tails.directory');
         $this->recursiveDeleteTailsViewFolder($tailsViewFolder);
 
         Artisan::call('view:clear');
