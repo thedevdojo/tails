@@ -24,6 +24,7 @@ class Tails
             abort(400, 'Invalid Tails API Key');
         }
         $response = Http::withToken( $apiKey )->get($endpoint);
+        
         if(!$response->ok()){
             self::handleErrorResponse($response);
         }
